@@ -3,7 +3,7 @@ package test.qun.com.weishi;
 import android.app.Application;
 import android.content.Context;
 
-import test.qun.com.weishi.engine.VersionEngine;
+import test.qun.com.weishi.engine.UpdateEngine;
 
 /**
  * Created by Administrator on 2018/3/13 0013.
@@ -20,7 +20,7 @@ public class App extends Application {
     }
 
     private void checkNewVersion() {
-        VersionEngine versionEngine = new VersionEngine();
-        boolean foundNewVersion = versionEngine.obtainNewVersion();
+        UpdateEngine updateEngine = new UpdateEngine();
+        updateEngine.fetchNewVersion();
     }
 }

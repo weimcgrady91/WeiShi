@@ -1,6 +1,7 @@
 package test.qun.com.weishi.activity;
 
 import android.content.Context;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,12 +12,11 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.Arrays;
-import java.util.List;
-
 import test.qun.com.weishi.R;
+import test.qun.com.weishi.engine.UpdateEngine;
+import test.qun.com.weishi.fragment.UpdateFragment;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     private GridView mGvSpec;
     private String[] mSpecNames;
@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         initViews();
         initData();
+        checkUpdate();
     }
 
     private void initViews() {
@@ -43,6 +44,11 @@ public class MainActivity extends AppCompatActivity {
         mSpecNames = getResources().getStringArray(R.array.specs);
         SpecAdapter adapter = new SpecAdapter(this);
         mGvSpec.setAdapter(adapter);
+    }
+
+    private void checkUpdate() {
+        UpdateEngine updateEngine = new UpdateEngine();
+        updateEngine.fetchNewVersion();
     }
 
     private class SpecAdapter extends BaseAdapter {
@@ -71,9 +77,9 @@ public class MainActivity extends AppCompatActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder viewHolder;
             if (convertView == null) {
-                convertView = mInflater.inflate(R.layout.item_spec,parent,false);
+                convertView = mInflater.inflate(R.layout.item_spec, parent, false);
                 viewHolder = new ViewHolder();
-                viewHolder.specPic =  convertView.findViewById(R.id.iv_spec_pic);
+                viewHolder.specPic = convertView.findViewById(R.id.iv_spec_pic);
                 viewHolder.specName = convertView.findViewById(R.id.tv_spec_name);
                 convertView.setTag(viewHolder);
             } else {

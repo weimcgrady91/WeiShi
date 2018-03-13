@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import test.qun.com.weishi.R;
-import test.qun.com.weishi.engine.VersionEngine;
 import test.qun.com.weishi.util.AppInfoUtil;
 
 public class SplashActivity extends AppCompatActivity {
