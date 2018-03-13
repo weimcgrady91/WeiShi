@@ -33,7 +33,7 @@ public class UpdateEngine {
     private static final String TAG = UpdateEngine.class.getSimpleName();
 
     public void fetchNewVersion() {
-        String url = "http://10.8.8.143:8080/WeiShiServer/updateInfo.txt";
+        String url = "http://192.168.31.154:8080/WeiShiServer/updateInfo.txt";
         OkHttpClient client = new OkHttpClient();
         Request.Builder builder = new Request.Builder().get();
         builder.url(url);
