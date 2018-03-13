@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
@@ -34,7 +35,7 @@ public class UpdateEngine {
     public void fetchNewVersion() {
         String url = "http://10.8.8.143:8080/WeiShiServer/updateInfo.txt";
         OkHttpClient client = new OkHttpClient();
-        Request.Builder builder = new Request.Builder();
+        Request.Builder builder = new Request.Builder().get();
         builder.url(url);
         Request request = builder.build();
         client.newCall(request).enqueue(new Callback() {
@@ -56,7 +57,7 @@ public class UpdateEngine {
                     if (newVersionCode > oldVersionCode) {
                         neededUpdate(updateBean);
                     } else {
-                        LogUtil.i(TAG,"It's the latest version");
+                        LogUtil.i(TAG, "It's the latest version");
                     }
                 }
             }
@@ -74,16 +75,20 @@ public class UpdateEngine {
 
     public void update(UpdateBean updateBean) {
         if (EnvironmentUtil.checkSDCardState() && EnvironmentUtil.checkUsableSpaceSize(updateBean.getApkSize())) {
-            String downPath = updateBean.getDownLoadPath();
-            final String fileName = downPath.substring(downPath.lastIndexOf("/"), downPath.length());
+            String downLoadPath = updateBean.getDownLoadPath();
+            final String fileName = downLoadPath.substring(downLoadPath.lastIndexOf("/") + 1, downLoadPath.length());
+            LogUtil.i(TAG, "downLoadPath=" + downLoadPath);
+            LogUtil.i(TAG, "fileName=" + fileName);
+
             OkHttpClient client = new OkHttpClient();
-            Request request = new Request.Builder()
-                    .url(updateBean.getDownLoadPath())
-                    .build();
+            Request.Builder builder = new Request.Builder().get();
+            builder.url(downLoadPath);
+            Request request = builder.build();
             client.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
                     LogUtil.i(TAG, "down new APK failure.");
+                    LogUtil.i(TAG, "e=" + e.getMessage());
                 }
 
                 @Override
