@@ -6,8 +6,8 @@ import android.os.Environment;
  * Created by Administrator on 2018/3/13 0013.
  */
 
-public class EnvironmentUtil {
-    private static final String TAG = EnvironmentUtil.class.getSimpleName();
+public class StorageUtil {
+    private static final String TAG = StorageUtil.class.getSimpleName();
 
     /**
      * 检查SD卡是否可用
