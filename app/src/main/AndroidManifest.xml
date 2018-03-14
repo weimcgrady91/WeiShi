@@ -36,7 +36,9 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".activity.SettingActivity"/>
+        <activity android:name=".activity.SettingActivity" />
+        <activity android:name=".activity.FoundActivity" />
+        <activity android:name=".activity.FoundSettingActivity"></activity>
     </application>
 
 </manifest>

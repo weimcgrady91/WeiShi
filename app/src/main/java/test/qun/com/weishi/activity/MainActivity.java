@@ -1,10 +1,9 @@
 package test.qun.com.weishi.activity;
 
+import android.app.DialogFragment;
 import android.content.Context;
-import android.content.Intent;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +14,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import test.qun.com.weishi.R;
+import test.qun.com.weishi.engine.PwdEngine;
 import test.qun.com.weishi.engine.UpdateEngine;
-import test.qun.com.weishi.fragment.UpdateFragment;
+import test.qun.com.weishi.fragment.PwdFragment;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements PwdFragment.OnPwdFragmentInteractionListener {
 
     private GridView mGvSpec;
     private String[] mSpecNames;
@@ -56,10 +56,46 @@ public class MainActivity extends BaseActivity {
 
     private void specClick(int position) {
         switch (position) {
+            case 0:
+                showPwdDialog();
+                break;
             case 8:
                 SettingActivity.forwardSetting(MainActivity.this);
                 break;
         }
+    }
+
+    private void showPwdDialog() {
+        FragmentManager fm = getSupportFragmentManager();
+        PwdFragment fragment;
+        PwdEngine pwdEngine = new PwdEngine();
+        boolean hasPwd = pwdEngine.hasPwd();
+        if (hasPwd) {
+            fragment = PwdFragment.newInstance(PwdFragment.validateMode);
+        } else {
+            fragment = PwdFragment.newInstance(PwdFragment.inputMode);
+        }
+        fragment.show(fm, "PwdDialog");
+    }
+
+    @Override
+    public void onValidateSuccess() {
+        FoundActivity.forwardFoundActivity(MainActivity.this);
+    }
+
+    @Override
+    public void onValidateFailure() {
+
+    }
+
+    @Override
+    public void onSetupPwdSuccess() {
+        FoundSettingActivity.forwardFoundSettingActivity(MainActivity.this);
+    }
+
+    @Override
+    public void onCancel() {
+
     }
 
     private void checkUpdate() {
