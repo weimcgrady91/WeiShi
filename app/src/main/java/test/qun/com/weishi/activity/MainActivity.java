@@ -1,12 +1,14 @@
 package test.qun.com.weishi.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -44,6 +46,20 @@ public class MainActivity extends BaseActivity {
         mSpecNames = getResources().getStringArray(R.array.specs);
         SpecAdapter adapter = new SpecAdapter(this);
         mGvSpec.setAdapter(adapter);
+        mGvSpec.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                specClick(position);
+            }
+        });
+    }
+
+    private void specClick(int position) {
+        switch (position) {
+            case 8:
+                SettingActivity.forwardSetting(MainActivity.this);
+                break;
+        }
     }
 
     private void checkUpdate() {
