@@ -15,6 +15,13 @@
         android:focusableInTouchMode="true"
         android:singleLine="true"
         android:text="@string/app_spec" />
+    <test.qun.com.weishi.views.MarqueeTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="marquee"
+        android:singleLine="true"
+        android:text="@string/app_spec"
+        />
 
     <GridView
         android:layout_marginTop="20dp"

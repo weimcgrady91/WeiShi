@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SelectItemView">
+        <attr name="stv_summaryOn" format="string|reference" />
+        <attr name="stv_summaryOff" format="string|reference" />
+        <attr name="stv_title" format="string|reference" />
+    </declare-styleable>
+</resources>

@@ -26,7 +26,7 @@ public class PwdFragment extends DialogFragment implements View.OnClickListener 
 
     private OnPwdFragmentInteractionListener mListener;
     private EditText mPwd;
-    private EditText mPwdConfim;
+    private EditText mPwdConfirm;
     private PwdEngine mPwdEngine;
 
     public PwdFragment() {
@@ -59,7 +59,7 @@ public class PwdFragment extends DialogFragment implements View.OnClickListener 
             Button btnOk = view.findViewById(R.id.btn_ok);
             btnOk.setOnClickListener(this);
             mPwd = view.findViewById(R.id.et_pwd);
-            mPwdConfim = view.findViewById(R.id.et_pwd_confim);
+            mPwdConfirm = view.findViewById(R.id.et_pwd_confim);
         } else {
             view = inflater.inflate(R.layout.fragment_pwd_validate, container, false);
             Button btnCancel = view.findViewById(R.id.btn_cancel);
@@ -102,7 +102,7 @@ public class PwdFragment extends DialogFragment implements View.OnClickListener 
                 break;
             case R.id.btn_ok:
                 String pwd = mPwd.getText().toString();
-                String pwdConfirm = mPwdConfim.getText().toString();
+                String pwdConfirm = mPwdConfirm.getText().toString();
                 if (TextUtils.isEmpty(pwd) || TextUtils.isEmpty(pwdConfirm)) {
                     Toast.makeText(getActivity(), "密码不能为空", Toast.LENGTH_SHORT).show();
                     return;

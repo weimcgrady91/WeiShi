@@ -3,6 +3,9 @@ package test.qun.com.weishi.activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import test.qun.com.weishi.R;
@@ -23,6 +26,9 @@ public class SplashActivity extends AppCompatActivity {
         String versionFormat = getResources().getString(R.string.app_version);
         String version = String.format(versionFormat, AppInfoUtil.obtainVersionName());
         mVersion.setText(version);
+        View view = findViewById(R.id.container);
+        AlphaAnimation alphaAnimation = (AlphaAnimation) AnimationUtils.loadAnimation(this, R.anim.splash_anim);
+        view.startAnimation(alphaAnimation);
     }
 
     private void initEngine() {

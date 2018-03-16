@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -27,12 +28,13 @@
         android:text="下次重启手机如果发现SIM卡变化就会发送报警短信"
         android:textSize="19sp" />
 
-    <FrameLayout
-        android:id="@+id/container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-    </FrameLayout>
+    <test.qun.com.weishi.views.SelectItemView
+        android:id="@+id/stv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:stv_summaryOff="Sim卡未绑定"
+        app:stv_summaryOn="Sim卡已绑定"
+        app:stv_title="点击绑定Sim卡" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -56,12 +58,6 @@
             android:gravity="center_horizontal"
             android:orientation="horizontal">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:src="@drawable/dot_focus" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -69,6 +65,13 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:src="@drawable/dot_not_focus" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/dot_focus" />
 
             <ImageView
                 android:layout_width="wrap_content"

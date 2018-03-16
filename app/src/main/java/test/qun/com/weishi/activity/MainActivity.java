@@ -1,6 +1,5 @@
 package test.qun.com.weishi.activity;
 
-import android.app.DialogFragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -82,7 +81,6 @@ public class MainActivity extends BaseActivity implements PwdFragment.OnPwdFragm
     public void onValidateSuccess() {
         FoundActivity.forwardFoundActivity(MainActivity.this);
     }
-
     @Override
     public void onValidateFailure() {
 
@@ -90,7 +88,7 @@ public class MainActivity extends BaseActivity implements PwdFragment.OnPwdFragm
 
     @Override
     public void onSetupPwdSuccess() {
-        FoundSettingActivity.forwardFoundSettingActivity(MainActivity.this);
+        FoundActivity.forwardFoundActivity(MainActivity.this);
     }
 
     @Override
