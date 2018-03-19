@@ -12,7 +12,11 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import test.qun.com.weishi.App;
+import test.qun.com.weishi.ConstantValue;
 import test.qun.com.weishi.R;
+import test.qun.com.weishi.service.NumberAreaService;
+import test.qun.com.weishi.util.ServiceUtil;
 
 public class SettingActivity extends AppCompatActivity {
 
@@ -31,8 +35,6 @@ public class SettingActivity extends AppCompatActivity {
     }
 
     public static class SettingFragment extends PreferenceFragment {
-        public static final String KEY_AUTO_UPDATE = "cbp_auto_update";
-
         public SettingFragment() {
         }
 
@@ -40,12 +42,29 @@ public class SettingActivity extends AppCompatActivity {
         public void onCreate(@Nullable Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.setting_pref);
+            CheckBoxPreference preference = (CheckBoxPreference) findPreference(ConstantValue.KEY_SHOW_NUMBER_AREAF);
+            if (ServiceUtil.isServiceRunning(App.sContext, NumberAreaService.class.getName())) {
+                preference.setChecked(true);
+            } else {
+                preference.setChecked(false);
+            }
+
         }
 
         @Override
         public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
             String key = preference.getKey();
-            if (KEY_AUTO_UPDATE.equals(key)) {
+            if (ConstantValue.KEY_SHOW_NUMBER_AREAF.equals(key)) {
+                CheckBoxPreference p = (CheckBoxPreference) preference;
+                if (p.isChecked()) {
+                    //startService
+                    Intent intent = new Intent(getActivity(), NumberAreaService.class);
+                    getActivity().startService(intent);
+                } else {
+                    //stopService
+                    Intent intent = new Intent(getActivity(), NumberAreaService.class);
+                    getActivity().stopService(intent);
+                }
             }
             return super.onPreferenceTreeClick(preferenceScreen, preference);
         }

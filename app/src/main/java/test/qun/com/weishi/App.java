@@ -26,7 +26,7 @@ public class App extends Application {
     }
 
     private void checkNewVersion() {
-        boolean autoUpdateFlag = (Boolean) PreferencesUtil.getData(this, SettingActivity.SettingFragment.KEY_AUTO_UPDATE, false);
+        boolean autoUpdateFlag = (Boolean) PreferencesUtil.getData(this, ConstantValue.KEY_AUTO_UPDATE, false);
         LogUtil.i("autoUpdateFlag=" + autoUpdateFlag);
         if (autoUpdateFlag) {
             UpdateEngine updateEngine = new UpdateEngine();
