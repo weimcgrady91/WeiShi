@@ -58,6 +58,9 @@ public class MainActivity extends BaseActivity implements PwdFragment.OnPwdFragm
             case 0:
                 showPwdDialog();
                 break;
+            case 7:
+                AdvancedToolsActivity.enter(this);
+                break;
             case 8:
                 SettingActivity.forwardSetting(MainActivity.this);
                 break;

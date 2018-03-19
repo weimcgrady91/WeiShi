@@ -8,8 +8,16 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
 import test.qun.com.weishi.R;
 import test.qun.com.weishi.util.AppInfoUtil;
+import test.qun.com.weishi.util.LogUtil;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -29,6 +37,56 @@ public class SplashActivity extends AppCompatActivity {
         View view = findViewById(R.id.container);
         AlphaAnimation alphaAnimation = (AlphaAnimation) AnimationUtils.loadAnimation(this, R.anim.splash_anim);
         view.startAnimation(alphaAnimation);
+        importPhoneAreaDB("address.db");
+    }
+
+    private void importPhoneAreaDB(final String dbName) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                File parent = getFilesDir();
+                File f = new File(parent, dbName);
+                if (!f.exists()) {
+                    FileOutputStream ops = null;
+                    InputStream in = null;
+                    try {
+                        ops = new FileOutputStream(f);
+                        in = getAssets().open(dbName);
+                        byte[] buff = new byte[1024];
+                        int len = 0;
+                        while ((len = in.read(buff)) != -1) {
+                            ops.write(buff, 0, len);
+                        }
+                        ops.flush();
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                        f.delete();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        f.delete();
+                    } finally {
+                        try {
+                            if (in != null) {
+                                in.close();
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            if (ops != null) {
+                                ops.close();
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                    LogUtil.i("import address.db success");
+                } else {
+                    LogUtil.i(" address.db is exits");
+                }
+            }
+        }).start();
     }
 
     private void initEngine() {
