@@ -10,7 +10,6 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import test.qun.com.weishi.App;
 import test.qun.com.weishi.ConstantValue;
@@ -42,7 +41,7 @@ public class SettingActivity extends AppCompatActivity {
         public void onCreate(@Nullable Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.setting_pref);
-            CheckBoxPreference preference = (CheckBoxPreference) findPreference(ConstantValue.KEY_SHOW_NUMBER_AREAF);
+            CheckBoxPreference preference = (CheckBoxPreference) findPreference(ConstantValue.KEY_SHOW_NUMBER_AREA);
             if (ServiceUtil.isServiceRunning(App.sContext, NumberAreaService.class.getName())) {
                 preference.setChecked(true);
             } else {
@@ -54,7 +53,7 @@ public class SettingActivity extends AppCompatActivity {
         @Override
         public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
             String key = preference.getKey();
-            if (ConstantValue.KEY_SHOW_NUMBER_AREAF.equals(key)) {
+            if (ConstantValue.KEY_SHOW_NUMBER_AREA.equals(key)) {
                 CheckBoxPreference p = (CheckBoxPreference) preference;
                 if (p.isChecked()) {
                     //startService
