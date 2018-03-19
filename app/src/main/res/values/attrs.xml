@@ -5,4 +5,8 @@
         <attr name="stv_summaryOff" format="string|reference" />
         <attr name="stv_title" format="string|reference" />
     </declare-styleable>
+    <declare-styleable name="CheckItemView">
+        <attr name="civ_contentOn" format="string|reference"/>
+        <attr name="civ_contentOff" format="string|reference"/>
+    </declare-styleable>
 </resources>

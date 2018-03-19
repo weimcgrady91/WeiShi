@@ -81,6 +81,7 @@ public class MainActivity extends BaseActivity implements PwdFragment.OnPwdFragm
     public void onValidateSuccess() {
         FoundActivity.forwardFoundActivity(MainActivity.this);
     }
+
     @Override
     public void onValidateFailure() {
 
