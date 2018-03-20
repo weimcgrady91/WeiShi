@@ -32,6 +32,6 @@ public class AdvancedToolsActivity extends AppCompatActivity {
     }
 
     private void enterQueryActivity() {
-        PhoneQueryActivity.enter(this);
+        NumberAreaActivity.enter(this);
     }
 }

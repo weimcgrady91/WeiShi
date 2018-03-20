@@ -14,12 +14,18 @@
         <item>设置中心</item>
     </string-array>
     <string-array name="entries_number_area_style">
-        <item>不透明</item>
-        <item>半透明</item>
+        <item>蓝色</item>
+        <item>灰色</item>
+        <item>绿色</item>
+        <item>橘色</item>
+        <item>白色</item>
     </string-array>
     <string-array name="entryvalues_number_area_style">
         <item>0</item>
         <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
     </string-array>
 
     <string name="sample_device_admin">设备管理者</string>

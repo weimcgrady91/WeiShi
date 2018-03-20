@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
@@ -47,6 +48,19 @@ public class SettingActivity extends AppCompatActivity {
             } else {
                 preference.setChecked(false);
             }
+            final ListPreference preference1 = (ListPreference) findPreference(ConstantValue.KEY_NUMBER_AREA_STYLE);
+            CharSequence[] entries = preference1.getEntries();
+            int index = preference1.findIndexOfValue(preference1.getValue());
+            preference1.setSummary(entries[index]);
+            preference1.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    CharSequence[] entries = preference1.getEntries();
+                    int index = preference1.findIndexOfValue((String) newValue);
+                    preference1.setSummary(entries[index]);
+                    return true;
+                }
+            });
 
         }
 

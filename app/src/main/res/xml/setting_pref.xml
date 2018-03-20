@@ -5,27 +5,26 @@
             android:key="cbp_auto_update"
             android:summaryOff="自动更新已经关闭"
             android:summaryOn="自动更新已经开启"
-            android:title="自动更新设置"/>
+            android:title="自动更新设置" />
     </PreferenceCategory>
     <PreferenceCategory android:title="second">
         <CheckBoxPreference
             android:key="cbp_number_area"
             android:summaryOff="归属地显示已经关闭"
             android:summaryOn="归属地显示已经开启"
-            android:title="电话归属地显示设置"/>
+            android:title="电话归属地显示设置" />
         <ListPreference
             android:dialogTitle="归属地提示框风格"
             android:entries="@array/entries_number_area_style"
             android:entryValues="@array/entryvalues_number_area_style"
             android:key="lp_number_area_style"
-            android:summary="半透明"
-            android:title="归属地提示框风格"/>
+            android:title="归属地提示框风格" />
         <PreferenceScreen
             android:summary="设置归属地提示框的位置"
             android:title="归属地提示框的位置">
             <intent
-                android:action="android.intent.action.VIEW"
-                android:data="http://www.baidu.com"/>
+                android:targetClass="test.qun.com.weishi.activity.NumberAreaLocationActivity"
+                android:targetPackage="test.qun.com.weishi" />
         </PreferenceScreen>
     </PreferenceCategory>
     <PreferenceCategory android:title="third">
@@ -33,11 +32,11 @@
             android:key="cbp_black_List"
             android:summaryOff="黑名单拦截已经关闭"
             android:summaryOn="黑名单拦截已经开启"
-            android:title="黑名单拦截设置"/>
+            android:title="黑名单拦截设置" />
         <SwitchPreference
             android:key="cbp_watch_dog"
             android:summaryOff="程序锁已经关闭"
             android:summaryOn="程序锁已经开启"
-            android:title="程序锁的设置"/>
+            android:title="程序锁的设置" />
     </PreferenceCategory>
 </PreferenceScreen>
