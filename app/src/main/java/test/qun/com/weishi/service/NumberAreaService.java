@@ -1,12 +1,16 @@
 package test.qun.com.weishi.service;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.PixelFormat;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
@@ -36,6 +40,19 @@ public class NumberAreaService extends Service {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
+    class InnerOutCallReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            //接收到此广播后,需要显示自定义的吐司,显示播出归属地号码
+            //获取播出电话号码的字符串
+            Log.e("weiqun12345","InnerOutCallReceiver onReceive");
+            String phone = getResultData();
+            showToast(phone);
+        }
+    }
+
+    InnerOutCallReceiver mInnerOutCallReceiver;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -44,7 +61,12 @@ public class NumberAreaService extends Service {
         mTm.listen(mPhoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
         LogUtil.i("NumberAreaService onCreate");
         mWm = (WindowManager) getSystemService(WINDOW_SERVICE);
-
+//监听播出电话的广播过滤条件(权限)
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_NEW_OUTGOING_CALL);
+        //创建广播接受者
+        mInnerOutCallReceiver = new InnerOutCallReceiver();
+        registerReceiver(mInnerOutCallReceiver, intentFilter);
     }
 
     @Override
@@ -53,6 +75,9 @@ public class NumberAreaService extends Service {
         LogUtil.i("NumberAreaService onDestroy");
         if (mPhoneStateListener != null && mTm != null) {
             mTm.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
+        }
+        if (mInnerOutCallReceiver != null) {
+            unregisterReceiver(mInnerOutCallReceiver);
         }
     }
 
@@ -97,8 +122,8 @@ public class NumberAreaService extends Service {
         params.setTitle("Toast");
         params.flags = WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
                 | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-        int left = (int) PreferencesUtil.getData(App.sContext,"location_x",0);
-        int top = (int) PreferencesUtil.getData(App.sContext,"location_y",0);
+        int left = (int) PreferencesUtil.getData(App.sContext, "location_x", 0);
+        int top = (int) PreferencesUtil.getData(App.sContext, "location_y", 0);
         params.gravity = Gravity.LEFT + Gravity.TOP;
         params.x = left;
         params.y = top;

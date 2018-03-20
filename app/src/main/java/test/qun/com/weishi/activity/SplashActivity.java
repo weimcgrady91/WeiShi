@@ -1,12 +1,19 @@
 package test.qun.com.weishi.activity;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,6 +21,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import test.qun.com.weishi.R;
 import test.qun.com.weishi.util.AppInfoUtil;
@@ -27,6 +36,7 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         initViews();
         initEngine();
+        checkRequiredPermission(this);
     }
 
     private void initViews() {
@@ -112,5 +122,44 @@ public class SplashActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    //所需要申请的权限数组
+    private static final String[] permissionsArray = new String[]{
+            Manifest.permission.PROCESS_OUTGOING_CALLS,
+            Manifest.permission.CALL_PHONE,
+            Manifest.permission.SEND_SMS};
+    //还需申请的权限列表
+    private List<String> permissionsList = new ArrayList<String>();
+    //申请权限后的返回码
+    private static final int REQUEST_CODE_ASK_PERMISSIONS = 1;
+
+    private void checkRequiredPermission(final Activity activity) {
+        for (String permission : permissionsArray) {
+            if (ContextCompat.checkSelfPermission(activity, permission) != PackageManager.PERMISSION_GRANTED) {
+                permissionsList.add(permission);
+            }
+        }
+        if(permissionsList.size()!=0) {
+
+            ActivityCompat.requestPermissions(activity, permissionsList.toArray(new String[permissionsList.size()]), REQUEST_CODE_ASK_PERMISSIONS);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE_ASK_PERMISSIONS:
+                for (int i = 0; i < permissions.length; i++) {
+                    if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                        Toast.makeText(SplashActivity.this, "做一些申请成功的权限对应的事！" + permissions[i], Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(SplashActivity.this, "权限被拒绝： " + permissions[i], Toast.LENGTH_SHORT).show();
+                    }
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 }
