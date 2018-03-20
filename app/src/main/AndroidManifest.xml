@@ -97,11 +97,20 @@
         <service
             android:name=".service.NumberAreaService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
 
         <activity
             android:name=".activity.NumberAreaLocationActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <service
+            android:name=".service.RocketService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity
+            android:name=".activity.RocketActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
     </application>
 
 </manifest>

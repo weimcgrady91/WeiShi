@@ -39,4 +39,11 @@
             android:summaryOn="程序锁已经开启"
             android:title="程序锁的设置" />
     </PreferenceCategory>
+    <PreferenceCategory android:title="小火箭">
+        <CheckBoxPreference
+            android:key="cbp_rocket"
+            android:summaryOff="小火箭已经关闭"
+            android:summaryOn="小火箭已经开启"
+            android:title="小火箭" />
+    </PreferenceCategory>
 </PreferenceScreen>

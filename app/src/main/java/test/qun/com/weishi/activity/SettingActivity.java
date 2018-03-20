@@ -16,6 +16,7 @@ import test.qun.com.weishi.App;
 import test.qun.com.weishi.ConstantValue;
 import test.qun.com.weishi.R;
 import test.qun.com.weishi.service.NumberAreaService;
+import test.qun.com.weishi.service.RocketService;
 import test.qun.com.weishi.util.ServiceUtil;
 
 public class SettingActivity extends AppCompatActivity {
@@ -42,6 +43,14 @@ public class SettingActivity extends AppCompatActivity {
         public void onCreate(@Nullable Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.setting_pref);
+
+            CheckBoxPreference rocket = (CheckBoxPreference) findPreference(ConstantValue.KEY_ROCKET);
+            if (ServiceUtil.isServiceRunning(App.sContext, RocketService.class.getName())) {
+                rocket.setChecked(true);
+            } else {
+                rocket.setChecked(false);
+            }
+
             CheckBoxPreference preference = (CheckBoxPreference) findPreference(ConstantValue.KEY_SHOW_NUMBER_AREA);
             if (ServiceUtil.isServiceRunning(App.sContext, NumberAreaService.class.getName())) {
                 preference.setChecked(true);
@@ -51,7 +60,12 @@ public class SettingActivity extends AppCompatActivity {
             final ListPreference preference1 = (ListPreference) findPreference(ConstantValue.KEY_NUMBER_AREA_STYLE);
             CharSequence[] entries = preference1.getEntries();
             int index = preference1.findIndexOfValue(preference1.getValue());
-            preference1.setSummary(entries[index]);
+            if(index==-1){
+                preference1.setSummary(entries[0]);
+            } else {
+                preference1.setSummary(entries[index]);
+            }
+
             preference1.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -76,6 +90,18 @@ public class SettingActivity extends AppCompatActivity {
                 } else {
                     //stopService
                     Intent intent = new Intent(getActivity(), NumberAreaService.class);
+                    getActivity().stopService(intent);
+                }
+            }
+            if (ConstantValue.KEY_ROCKET.equals(key)) {
+                CheckBoxPreference p = (CheckBoxPreference) preference;
+                if (p.isChecked()) {
+                    //startService
+                    Intent intent = new Intent(getActivity(), RocketService.class);
+                    getActivity().startService(intent);
+                } else {
+                    //stopService
+                    Intent intent = new Intent(getActivity(), RocketService.class);
                     getActivity().stopService(intent);
                 }
             }
