@@ -30,6 +30,7 @@ public class PhoneQueryActivity extends AppCompatActivity {
     private EditText mEtPhone;
     private Button mBtnQuery;
     private TextView mTvPhoneArea;
+    
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
