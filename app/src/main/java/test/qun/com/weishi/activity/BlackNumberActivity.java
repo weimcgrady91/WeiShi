@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -44,6 +45,9 @@ public class BlackNumberActivity extends AppCompatActivity implements AddBlackNu
         initViews();
     }
 
+    private boolean mIsLoad = false;
+    private int mCount;
+
     private void initViews() {
         mBtnAdd = findViewById(R.id.btn_add);
         mBtnAdd.setOnClickListener(new View.OnClickListener() {
@@ -55,7 +59,39 @@ public class BlackNumberActivity extends AppCompatActivity implements AddBlackNu
         mListView = findViewById(R.id.listView);
         mBlackNumberAdapter = new BlackNumberAdapter(this);
         mListView.setAdapter(mBlackNumberAdapter);
-        queryBlackNumber();
+        mCount = BlackNumberDao.getInstance().getCount();
+        mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE
+                        && mListView.getLastVisiblePosition() >= mBlackNumberBeanList.size() - 1
+                        && !mIsLoad) {
+                    if (mCount > mBlackNumberBeanList.size()) {
+                        //加载下一页数据
+                        mIsLoad = true;
+                        new Thread() {
+                            public void run() {
+                                //1,获取操作黑名单数据库的对象
+                                //2,查询部分数据
+                                List<BlackNumberBean> moreData = BlackNumberDao.getInstance().find(mBlackNumberBeanList.size());
+                                //3,添加下一页数据的过程
+//                                mBlackNumberList.addAll(moreData);
+                                Message message = mHandler.obtainMessage();
+                                message.what = 1;
+                                message.obj = moreData;
+                                mHandler.sendMessage(message);
+                            }
+                        }.start();
+                    }
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+        });
+        queryBlackNumber(0);
     }
 
     private Handler mHandler = new Handler() {
@@ -63,16 +99,18 @@ public class BlackNumberActivity extends AppCompatActivity implements AddBlackNu
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             List<BlackNumberBean> list = (List<BlackNumberBean>) msg.obj;
+            LogUtil.i(TAG,"new data size=" + list.size());
             mBlackNumberBeanList.addAll(list);
             mBlackNumberAdapter.notifyDataSetChanged();
+            mIsLoad = false;
         }
     };
 
-    private void queryBlackNumber() {
+    private void queryBlackNumber(final int pageIndex) {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                List<BlackNumberBean> list = BlackNumberDao.getInstance().findAll();
+                List<BlackNumberBean> list = BlackNumberDao.getInstance().find(pageIndex);
                 Message message = mHandler.obtainMessage();
                 message.what = 1;
                 message.obj = list;

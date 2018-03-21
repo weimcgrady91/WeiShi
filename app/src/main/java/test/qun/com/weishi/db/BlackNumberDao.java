@@ -76,7 +76,7 @@ public class BlackNumberDao {
 
 //        Cursor cursor = db.rawQuery("select phone,mode from black_number order by _id desc limit ?,20", new String[]{index + ""});
         Cursor cursor = db.query("black_number", new String[]{"phone", "mode"},
-                null, null, null, null, "_id desc limit " + index + ",20");
+                null, null, null, null, "_id desc limit " + index + ",8");
         List<BlackNumberBean> blackNumberList = new ArrayList<BlackNumberBean>();
         while (cursor.moveToNext()) {
             BlackNumberBean blackNumberInfo = new BlackNumberBean();
