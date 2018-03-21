@@ -14,6 +14,6 @@ public class LogUtil {
     }
 
     public static void i(String childTag, String content) {
-        Log.i(TAG + "-" + childTag, content);
+        Log.i(TAG, childTag + "-->>" + content);
     }
 }

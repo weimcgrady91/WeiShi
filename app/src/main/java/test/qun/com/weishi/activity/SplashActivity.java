@@ -140,7 +140,7 @@ public class SplashActivity extends AppCompatActivity {
                 permissionsList.add(permission);
             }
         }
-        if(permissionsList.size()!=0) {
+        if (permissionsList.size() != 0) {
 
             ActivityCompat.requestPermissions(activity, permissionsList.toArray(new String[permissionsList.size()]), REQUEST_CODE_ASK_PERMISSIONS);
         }

@@ -1,6 +1,7 @@
 package test.qun.com.weishi.activity;
 
 import android.app.FragmentManager;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,12 +10,14 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
+import android.preference.SwitchPreference;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import test.qun.com.weishi.App;
 import test.qun.com.weishi.ConstantValue;
 import test.qun.com.weishi.R;
+import test.qun.com.weishi.receiver.BlackNumberService;
 import test.qun.com.weishi.service.NumberAreaService;
 import test.qun.com.weishi.service.RocketService;
 import test.qun.com.weishi.util.ServiceUtil;
@@ -44,6 +47,13 @@ public class SettingActivity extends AppCompatActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.setting_pref);
 
+            SwitchPreference blackPreference = (SwitchPreference) findPreference(ConstantValue.KEY_BLACK_NUMBER);
+            if (ServiceUtil.isServiceRunning(App.sContext, BlackNumberService.class.getName())) {
+                blackPreference.setChecked(true);
+            } else {
+                blackPreference.setChecked(false);
+            }
+
             CheckBoxPreference rocket = (CheckBoxPreference) findPreference(ConstantValue.KEY_ROCKET);
             if (ServiceUtil.isServiceRunning(App.sContext, RocketService.class.getName())) {
                 rocket.setChecked(true);
@@ -60,7 +70,7 @@ public class SettingActivity extends AppCompatActivity {
             final ListPreference preference1 = (ListPreference) findPreference(ConstantValue.KEY_NUMBER_AREA_STYLE);
             CharSequence[] entries = preference1.getEntries();
             int index = preference1.findIndexOfValue(preference1.getValue());
-            if(index==-1){
+            if (index == -1) {
                 preference1.setSummary(entries[0]);
             } else {
                 preference1.setSummary(entries[index]);
@@ -81,6 +91,17 @@ public class SettingActivity extends AppCompatActivity {
         @Override
         public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
             String key = preference.getKey();
+            if (ConstantValue.KEY_BLACK_NUMBER.equals(key)) {
+                SwitchPreference p = (SwitchPreference) preference;
+                if (p.isChecked()) {
+                    Intent intent = new Intent(getActivity(), BlackNumberService.class);
+                    getActivity().startService(intent);
+                } else {
+                    Intent intent = new Intent(getActivity(), BlackNumberService.class);
+                    getActivity().stopService(intent);
+                }
+            }
+
             if (ConstantValue.KEY_SHOW_NUMBER_AREA.equals(key)) {
                 CheckBoxPreference p = (CheckBoxPreference) preference;
                 if (p.isChecked()) {

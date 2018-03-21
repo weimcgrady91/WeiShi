@@ -13,6 +13,6 @@ public class ConstantValue {
     public static final String KEY_SHOW_NUMBER_AREA = "cbp_number_area";
     public static final String KEY_NUMBER_AREA_STYLE = "lp_number_area_style";
     public static final String KEY_ROCKET = "cbp_rocket";
-
+    public static final String KEY_BLACK_NUMBER = "cbp_black_List";
 
 }

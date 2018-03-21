@@ -16,7 +16,6 @@ public class ServiceUtil {
         List<ActivityManager.RunningServiceInfo> services = am.getRunningServices(100);
         for (ActivityManager.RunningServiceInfo info : services) {
             String name = info.service.getClassName();
-            LogUtil.i("service name=" +name);
             if (name.equals(serviceName)) {
                 return true;
             }

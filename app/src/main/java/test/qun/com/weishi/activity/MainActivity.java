@@ -34,7 +34,6 @@ public class MainActivity extends BaseActivity implements PwdFragment.OnPwdFragm
         setContentView(R.layout.activity_main);
         initViews();
         initData();
-        checkUpdate();
     }
 
     private void initViews() {
@@ -57,6 +56,9 @@ public class MainActivity extends BaseActivity implements PwdFragment.OnPwdFragm
         switch (position) {
             case 0:
                 showPwdDialog();
+                break;
+            case 1:
+                BlackNumberActivity.enter(this);
                 break;
             case 7:
                 AdvancedToolsActivity.enter(this);
@@ -98,11 +100,6 @@ public class MainActivity extends BaseActivity implements PwdFragment.OnPwdFragm
     @Override
     public void onCancel() {
 
-    }
-
-    private void checkUpdate() {
-        UpdateEngine updateEngine = new UpdateEngine();
-        updateEngine.fetchNewVersion();
     }
 
     private class SpecAdapter extends BaseAdapter {
