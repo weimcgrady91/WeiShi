@@ -60,6 +60,9 @@ public class MainActivity extends BaseActivity implements PwdFragment.OnPwdFragm
             case 1:
                 BlackNumberActivity.enter(this);
                 break;
+            case 2:
+                AppManagerActivity.enter(this);
+                break;
             case 7:
                 AdvancedToolsActivity.enter(this);
                 break;
