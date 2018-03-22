@@ -128,7 +128,10 @@ public class SplashActivity extends AppCompatActivity {
     private static final String[] permissionsArray = new String[]{
             Manifest.permission.PROCESS_OUTGOING_CALLS,
             Manifest.permission.CALL_PHONE,
-            Manifest.permission.SEND_SMS};
+            Manifest.permission.SEND_SMS,
+            Manifest.permission.READ_CALL_LOG,
+            Manifest.permission.WRITE_CALL_LOG
+    };
     //还需申请的权限列表
     private List<String> permissionsList = new ArrayList<String>();
     //申请权限后的返回码

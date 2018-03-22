@@ -1,13 +1,14 @@
-package test.qun.com.weishi.receiver;
+package test.qun.com.weishi.service;
 
 import android.app.Service;
-import android.app.admin.DevicePolicyManager;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.media.MediaPlayer;
+import android.database.ContentObserver;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Handler;
 import android.os.IBinder;
 import android.telephony.PhoneStateListener;
 import android.telephony.SmsMessage;
@@ -17,9 +18,7 @@ import com.android.internal.telephony.ITelephony;
 
 import java.lang.reflect.Method;
 
-import test.qun.com.weishi.R;
 import test.qun.com.weishi.db.BlackNumberDao;
-import test.qun.com.weishi.service.LocationService;
 import test.qun.com.weishi.util.LogUtil;
 
 public class BlackNumberService extends Service {
@@ -27,6 +26,7 @@ public class BlackNumberService extends Service {
     private static final String TAG = BlackNumberService.class.getSimpleName();
     private TelephonyManager mTM;
     private MyPhoneStateListener mPhoneStateListener;
+    private MyContentObserver mContentObserver;
 
     public BlackNumberService() {
     }
@@ -50,7 +50,9 @@ public class BlackNumberService extends Service {
         //2,监听电话状态
         mPhoneStateListener = new MyPhoneStateListener();
         mTM.listen(mPhoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
+
     }
+
 
     @Override
     public void onDestroy() {
@@ -61,6 +63,9 @@ public class BlackNumberService extends Service {
         }
         if (mTM != null && mPhoneStateListener != null) {
             mTM.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
+        }
+        if (mContentObserver != null) {
+            getContentResolver().unregisterContentObserver(mContentObserver);
         }
     }
 
@@ -121,6 +126,34 @@ public class BlackNumberService extends Service {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+            mContentObserver = new MyContentObserver(new Handler(), phone);
+            getContentResolver().registerContentObserver(
+                    Uri.parse("content://call_log/calls"), true, mContentObserver);
+
+            Cursor cursor = getContentResolver().query(Uri.parse("content://call_log/calls"),new String[]{"number"},null,null,null,null);
+            while(cursor.moveToNext()){
+                LogUtil.i(TAG,"item=" +cursor.getString(0));
+            }
+            cursor.close();
+
+        }
+
+    }
+
+    private class MyContentObserver extends ContentObserver {
+        private String phoneNumber;
+
+        public MyContentObserver(Handler handler, String phone) {
+            super(handler);
+            phoneNumber = phone;
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+            super.onChange(selfChange);
+            LogUtil.i(TAG,"onChange");
+            getContentResolver().delete(Uri.parse("content://call_log/calls"), "number=?", new String[]{phoneNumber});
         }
     }
 }
