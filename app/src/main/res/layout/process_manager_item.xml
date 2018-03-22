@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="70dp">
+
+    <ImageView
+        android:id="@+id/img_icon"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="8dp"
+        android:src="@drawable/phone" />
+
+    <TextView
+        android:id="@+id/tv_package_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/img_icon"
+        android:layout_marginLeft="8dp"
+        android:layout_toRightOf="@id/img_icon"
+        android:text="com.gionee.weiqun"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/tv_memory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/img_icon"
+        android:layout_marginLeft="8dp"
+        android:layout_toRightOf="@+id/img_icon"
+        android:text="手机应用" />
+
+    <CheckBox
+        android:id="@+id/cb_selected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="8dp" />
+</RelativeLayout>
