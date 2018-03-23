@@ -153,7 +153,7 @@ public class NumberAreaService extends Service {
             @Override
             public void run() {
                 NumberAreaEngine engine = new NumberAreaEngine();
-                String result = engine.obtainnumberArea(NumberAreaService.this, incommingNumber);
+                String result = engine.obtainNumberArea(NumberAreaService.this, incommingNumber);
                 Message message = mHandler.obtainMessage();
                 message.what = 1;
                 message.obj = result;

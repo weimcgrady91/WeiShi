@@ -17,7 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -51,15 +50,16 @@ public class SplashActivity extends AppCompatActivity {
         View view = findViewById(R.id.container);
         AlphaAnimation alphaAnimation = (AlphaAnimation) AnimationUtils.loadAnimation(this, R.anim.splash_anim);
         view.startAnimation(alphaAnimation);
-        importPhoneAreaDB("address.db");
+        importDB("address.db");
+        importDB("commonnum.db");
     }
 
     /**
      * 生成快捷方式
      */
     private void initShortCut() {
-        boolean hasShortcut = (boolean) PreferencesUtil.getData(this,ConstantValue.HAS_SHORTCUT,false);
-        if(hasShortcut) {
+        boolean hasShortcut = (boolean) PreferencesUtil.getData(this, ConstantValue.HAS_SHORTCUT, false);
+        if (hasShortcut) {
             return;
         }
         //1,给intent维护图标,名称
@@ -81,7 +81,7 @@ public class SplashActivity extends AppCompatActivity {
         PreferencesUtil.setData(this, ConstantValue.HAS_SHORTCUT, true);
     }
 
-    private void importPhoneAreaDB(final String dbName) {
+    private void importDB(final String dbName) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -122,9 +122,9 @@ public class SplashActivity extends AppCompatActivity {
                         }
 
                     }
-                    LogUtil.i("import address.db success");
+                    LogUtil.i("import " + dbName + " success");
                 } else {
-                    LogUtil.i(" address.db is exits");
+                    LogUtil.i(dbName + "  is exits");
                 }
             }
         }).start();

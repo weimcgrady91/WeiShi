@@ -11,7 +11,7 @@ import android.os.Message;
 
 public class NumberAreaEngine {
 
-    public String obtainnumberArea(Context context, String number) {
+    public String obtainNumberArea(Context context, String number) {
         String result = "未知号码";
         String regex = "^1[3-8]\\d{9}";
         if (!number.matches(regex)) {

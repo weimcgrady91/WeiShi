@@ -92,7 +92,7 @@ public class NumberAreaActivity extends AppCompatActivity {
             @Override
             public void run() {
                 NumberAreaEngine engine = new NumberAreaEngine();
-                String result = engine.obtainnumberArea(NumberAreaActivity.this, phoneNumber);
+                String result = engine.obtainNumberArea(NumberAreaActivity.this, phoneNumber);
                 Message message = mHandler.obtainMessage();
                 message.what = 1;
                 message.obj = result;
