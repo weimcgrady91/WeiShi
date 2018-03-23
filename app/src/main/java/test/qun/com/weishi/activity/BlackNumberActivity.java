@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -170,7 +169,7 @@ public class BlackNumberActivity extends AppCompatActivity implements AddBlackNu
         public View getView(final int position, View convertView, ViewGroup parent) {
             ViewHolder viewHolder;
             if (convertView == null) {
-                convertView = mInflater.inflate(R.layout.black_number_item, parent, false);
+                convertView = mInflater.inflate(R.layout.list_item_black_number, parent, false);
                 viewHolder = new ViewHolder();
                 viewHolder.tvPhoneNumber = convertView.findViewById(R.id.tv_phone_number);
                 viewHolder.tvMode = convertView.findViewById(R.id.tv_mode);

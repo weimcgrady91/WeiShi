@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CheckBox;
@@ -34,7 +33,7 @@ public class CheckItemView extends LinearLayout {
 
     public CheckItemView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        View.inflate(context, R.layout.check_item_view, this);
+        View.inflate(context, R.layout.view_check_item, this);
         mCheckBox = findViewById(R.id.checkbox);
         mContent = findViewById(R.id.tv_content);
 

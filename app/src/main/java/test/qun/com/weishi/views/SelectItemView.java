@@ -2,13 +2,9 @@ package test.qun.com.weishi.views;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.v4.content.res.TypedArrayUtils;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
-import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -38,7 +34,7 @@ public class SelectItemView extends RelativeLayout {
 
     public SelectItemView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        View.inflate(context, R.layout.select_item_view, this);
+        View.inflate(context, R.layout.view_select_item, this);
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.SelectItemView);
         mTitle = typedArray.getString(R.styleable.SelectItemView_stv_title);
         mSummaryOn = typedArray.getString(R.styleable.SelectItemView_stv_summaryOn);

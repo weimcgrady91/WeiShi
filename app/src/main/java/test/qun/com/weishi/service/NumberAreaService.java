@@ -127,7 +127,7 @@ public class NumberAreaService extends Service {
         params.gravity = Gravity.LEFT + Gravity.TOP;
         params.x = left;
         params.y = top;
-        mView = View.inflate(this, R.layout.number_area_toast, null);
+        mView = View.inflate(this, R.layout.view_number_area_toast, null);
         mTvNumberArea = mView.findViewById(R.id.tv_number_area);
 
         String value = (String) PreferencesUtil.getData(App.sContext, "lp_number_area_style", "0");

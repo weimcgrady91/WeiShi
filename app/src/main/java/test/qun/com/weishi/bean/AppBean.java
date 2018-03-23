@@ -52,4 +52,12 @@ public class AppBean {
     public void setSDCard(boolean SDCard) {
         isSDCard = SDCard;
     }
+
+    @Override
+    public String toString() {
+        return "AppBean{" +
+                "pckname='" + packageName + '\'' +
+                ", isSystem=" + isSystem +
+                '}';
+    }
 }

@@ -4,6 +4,7 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Debug;
 
 import com.jaredrummler.android.processes.AndroidProcesses;
@@ -20,13 +21,17 @@ import test.qun.com.weishi.bean.ProcessBean;
  */
 
 public class ProcessEngine {
+    private static final String TAG = ProcessEngine.class.getSimpleName();
+
     public int obtainProcessCount(Context context) {
-//        ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        //2,获取正在运行进程的集合
-//        List<ActivityManager.RunningAppProcessInfo> runningAppProcesses = am.getRunningAppProcesses();
-        //3,返回集合的总数
-        List<AndroidAppProcess> processes = AndroidProcesses.getRunningAppProcesses();
-        return processes.size();
+        if (android.os.Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+            ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+            List<ActivityManager.RunningAppProcessInfo> runningAppProcesses = am.getRunningAppProcesses();
+            return runningAppProcesses.size();
+        } else {
+            List<AndroidAppProcess> processes = AndroidProcesses.getRunningAppProcesses();
+            return processes.size();
+        }
     }
 
     public long obtainAvailableMemory(Context context) {
@@ -55,35 +60,65 @@ public class ProcessEngine {
         List<ProcessBean> processInfoList = new ArrayList<>();
         ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         PackageManager pm = context.getPackageManager();
-        //2,获取正在运行进程的集合
-        List<ActivityManager.RunningAppProcessInfo> runningAppProcesses = am.getRunningAppProcesses();
-        for (ActivityManager.RunningAppProcessInfo runningAppProcessInfo : runningAppProcesses) {
-            ProcessBean bean = new ProcessBean();
-            bean.setPackageName(runningAppProcessInfo.processName);
-            Debug.MemoryInfo[] memoryInfos = am.getProcessMemoryInfo(new int[]{runningAppProcessInfo.pid});
-            android.os.Debug.MemoryInfo memoryInfo = memoryInfos[0];
-            bean.memSize = memoryInfo.getTotalPrivateDirty() * 1024;
-
-            try {
-                ApplicationInfo applicationInfo = pm.getApplicationInfo(bean.packageName, 0);
-                //8,获取应用的名称
-                bean.name = applicationInfo.loadLabel(pm).toString();
-                //9,获取应用的图标
-                bean.icon = applicationInfo.loadIcon(pm);
-                //10,判断是否为系统进程
-                if ((applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == ApplicationInfo.FLAG_SYSTEM) {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+            List<ActivityManager.RunningAppProcessInfo> runningAppProcesses = am.getRunningAppProcesses();
+            for (ActivityManager.RunningAppProcessInfo runningAppProcessInfo : runningAppProcesses) {
+                ProcessBean bean = new ProcessBean();
+                bean.setPackageName(runningAppProcessInfo.processName);
+                Debug.MemoryInfo[] memoryInfos = am.getProcessMemoryInfo(new int[]{runningAppProcessInfo.pid});
+                android.os.Debug.MemoryInfo memoryInfo = memoryInfos[0];
+                bean.memSize = memoryInfo.getTotalPrivateDirty() * 1024;
+                try {
+                    ApplicationInfo applicationInfo = pm.getApplicationInfo(bean.packageName, 0);
+                    //8,获取应用的名称
+                    bean.name = applicationInfo.loadLabel(pm).toString();
+                    //9,获取应用的图标
+                    bean.icon = applicationInfo.loadIcon(pm);
+                    //10,判断是否为系统进程
+                    if ((applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == ApplicationInfo.FLAG_SYSTEM) {
+                        bean.isSystem = true;
+                    } else {
+                        bean.isSystem = false;
+                    }
+                } catch (PackageManager.NameNotFoundException e) {
+                    //需要处理
+                    bean.name = runningAppProcessInfo.processName;
+                    bean.icon = context.getResources().getDrawable(R.drawable.ic_launcher);
                     bean.isSystem = true;
-                } else {
-                    bean.isSystem = false;
+                    e.printStackTrace();
                 }
-            } catch (PackageManager.NameNotFoundException e) {
-                //需要处理
-                bean.name = runningAppProcessInfo.processName;
-                bean.icon = context.getResources().getDrawable(R.drawable.ic_launcher);
-                bean.isSystem = true;
-                e.printStackTrace();
+                processInfoList.add(bean);
             }
-            processInfoList.add(bean);
+        } else {
+            List<AndroidAppProcess> processes = AndroidProcesses.getRunningAppProcesses();
+            for (AndroidAppProcess process : processes) {
+                ProcessBean bean = new ProcessBean();
+                bean.setPackageName(process.getPackageName());
+                Debug.MemoryInfo[] memoryInfos = am.getProcessMemoryInfo(new int[]{process.pid});
+                android.os.Debug.MemoryInfo memoryInfo = memoryInfos[0];
+                bean.memSize = memoryInfo.getTotalPrivateDirty() * 1024;
+
+                try {
+                    ApplicationInfo applicationInfo = pm.getApplicationInfo(bean.packageName, 0);
+                    //8,获取应用的名称
+                    bean.name = applicationInfo.loadLabel(pm).toString();
+                    //9,获取应用的图标
+                    bean.icon = applicationInfo.loadIcon(pm);
+                    //10,判断是否为系统进程
+                    if ((applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == ApplicationInfo.FLAG_SYSTEM) {
+                        bean.isSystem = true;
+                    } else {
+                        bean.isSystem = false;
+                    }
+                } catch (PackageManager.NameNotFoundException e) {
+                    //需要处理
+                    bean.name = process.getPackageName();
+                    bean.icon = context.getResources().getDrawable(R.drawable.ic_launcher);
+                    bean.isSystem = true;
+                    e.printStackTrace();
+                }
+                processInfoList.add(bean);
+            }
         }
         return processInfoList;
     }

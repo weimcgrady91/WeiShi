@@ -49,7 +49,7 @@ public class RocketService extends Service {
         params.gravity = Gravity.TOP + Gravity.LEFT;
         params.setTitle("Toast");
 
-        mRocketView = View.inflate(this, R.layout.rocket_view, null);
+        mRocketView = View.inflate(this, R.layout.view_rocket, null);
 
         ImageView imgRocket = mRocketView.findViewById(R.id.iv_rocket);
         AnimationDrawable animationDrawable = (AnimationDrawable) imgRocket.getBackground();

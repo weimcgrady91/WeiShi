@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import test.qun.com.weishi.R;
 import test.qun.com.weishi.engine.PwdEngine;
-import test.qun.com.weishi.engine.UpdateEngine;
 import test.qun.com.weishi.fragment.PwdFragment;
 
 public class MainActivity extends BaseActivity implements PwdFragment.OnPwdFragmentInteractionListener {
@@ -134,7 +133,7 @@ public class MainActivity extends BaseActivity implements PwdFragment.OnPwdFragm
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder viewHolder;
             if (convertView == null) {
-                convertView = mInflater.inflate(R.layout.item_spec, parent, false);
+                convertView = mInflater.inflate(R.layout.grid_item_spec, parent, false);
                 viewHolder = new ViewHolder();
                 viewHolder.specPic = convertView.findViewById(R.id.iv_spec_pic);
                 viewHolder.specName = convertView.findViewById(R.id.tv_spec_name);

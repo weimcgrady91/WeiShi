@@ -5,15 +5,13 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.StatFs;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.format.Formatter;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,22 +36,24 @@ import test.qun.com.weishi.util.LogUtil;
 
 public class AppManagerActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = AppManagerActivity.class.getSimpleName();
-    private TextView mTvCiPan;
-    private TextView mTvSD;
     private ListView mListView;
     private List<AppBean> mAppBeanList = new ArrayList<>();
-    private List<AppBean> phoneApps = new ArrayList<>();
-    private List<AppBean> systemApps = new ArrayList<>();
+    private int mUserSize;
+    private int mSystemSize;
     private AppBeanAdapter mAppBeanAdapter;
+    private TextView mTv_title;
+    private PopupWindow mPopupWindow;
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+            mAppBeanList.clear();
+            mAppBeanList.addAll((List<AppBean>) msg.obj);
+            mUserSize = msg.arg1;
+            mSystemSize = msg.arg2;
             mAppBeanAdapter.notifyDataSetChanged();
         }
     };
-    private TextView mTv_title;
-    private PopupWindow mPopupWindow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,16 +74,25 @@ public class AppManagerActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void run() {
                 List<AppBean> beans = AppEngine.getAppBeanList(App.sContext);
-                systemApps.clear();
-                phoneApps.clear();
+                List<AppBean> users = new ArrayList<>();
+                List<AppBean> systems = new ArrayList<>();
+
                 for (AppBean appBean : beans) {
                     if (appBean.isSystem()) {
-                        systemApps.add(appBean);
+                        systems.add(appBean);
                     } else {
-                        phoneApps.add(appBean);
+                        users.add(appBean);
                     }
                 }
+                beans.clear();
+                beans.addAll(users);
+                beans.addAll(systems);
+                LogUtil.i(TAG, "user app size=" + users.size());
+                LogUtil.i(TAG, "sys app size=" + systems.size());
                 Message message = mHandler.obtainMessage();
+                message.obj = beans;
+                message.arg1 = users.size();
+                message.arg2 = systems.size();
                 message.what = 1;
                 mHandler.sendMessage(message);
             }
@@ -92,13 +101,12 @@ public class AppManagerActivity extends AppCompatActivity implements View.OnClic
 
 
     private void initViews() {
-        mTvCiPan = findViewById(R.id.tv_cipan);
-        mTvSD = findViewById(R.id.tv_sd);
-
         String ciPanPath = Environment.getDataDirectory().getAbsolutePath();
         String sdPath = Environment.getExternalStorageDirectory().getAbsolutePath();
         String memoryAvailSpace = Formatter.formatFileSize(this, calculateAvailableSpace(ciPanPath));
         String sdMemoryAvailSpace = Formatter.formatFileSize(this, calculateAvailableSpace(sdPath));
+        TextView mTvCiPan = findViewById(R.id.tv_cipan);
+        TextView mTvSD = findViewById(R.id.tv_sd);
         mTvCiPan.setText("磁盘大小:" + memoryAvailSpace);
         mTvSD.setText("SD卡可用:" + sdMemoryAvailSpace);
 
@@ -115,25 +123,25 @@ public class AppManagerActivity extends AppCompatActivity implements View.OnClic
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (firstVisibleItem >= phoneApps.size() + 1) {
+                if (firstVisibleItem >= mUserSize + 1) {
                     //滚动到了系统条目
-                    mTv_title.setText("系统应用(" + systemApps.size() + ")");
+                    mTv_title.setText("系统应用(" + mSystemSize + ")");
                 } else {
                     //滚动到了用户应用条目
-                    mTv_title.setText("用户应用(" + phoneApps.size() + ")");
+                    mTv_title.setText("用户应用(" + mUserSize + ")");
                 }
             }
         });
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0 || position == phoneApps.size() + 1) {
+                if (position == 0 || position == mUserSize + 1) {
                     return;
                 } else {
-                    if (position < phoneApps.size() + 1) {
-                        mAppBean = phoneApps.get(position - 1);
+                    if (position < mUserSize + 1) {
+                        mAppBean = mAppBeanList.get(position - 1);
                     } else {
-                        mAppBean = systemApps.get(position - phoneApps.size() - 2);
+                        mAppBean = mAppBeanList.get(position  - 2);
                     }
                 }
                 showPopWindow(view);
@@ -184,7 +192,7 @@ public class AppManagerActivity extends AppCompatActivity implements View.OnClic
             mPopupWindow.dismiss();
             mPopupWindow = null;
         }
-        View view = View.inflate(this, R.layout.app_manager_pop, null);
+        View view = View.inflate(this, R.layout.view_app_manager_pop, null);
         TextView tvUnInstall = view.findViewById(R.id.tv_uninstall);
         tvUnInstall.setOnClickListener(this);
         TextView tvLaunch = view.findViewById(R.id.tv_launch);
@@ -207,7 +215,7 @@ public class AppManagerActivity extends AppCompatActivity implements View.OnClic
 
         @Override
         public int getCount() {
-            return phoneApps.size() + systemApps.size() + 2;
+            return mAppBeanList.size() + 2;
         }
 
         @Override
@@ -217,7 +225,7 @@ public class AppManagerActivity extends AppCompatActivity implements View.OnClic
 
         @Override
         public int getItemViewType(int position) {
-            if (position == 0 || position == phoneApps.size() + 1) {
+            if (position == 0 || position == mUserSize + 1) {
                 //title
                 return 0;
             } else {
@@ -229,14 +237,15 @@ public class AppManagerActivity extends AppCompatActivity implements View.OnClic
 
         @Override
         public AppBean getItem(int position) {
-            if (position == 0 || position == phoneApps.size() + 1) {
+            if (position == 0 || position == mUserSize + 1) {
                 return null;
             } else {
-                if (position < phoneApps.size() + 1) {
-                    LogUtil.i(TAG, "phoneApps.size=" + phoneApps.size());
-                    return phoneApps.get(position - 1);
+                if (position < mUserSize + 1) {
+                    return mAppBeanList.get(position - 1);
                 } else {
-                    return systemApps.get(position - phoneApps.size() - 2);
+                    AppBean bean = mAppBeanList.get(position -2);
+                    LogUtil.i(TAG, "bean=" + bean);
+                    return bean;
                 }
             }
         }
@@ -252,7 +261,7 @@ public class AppManagerActivity extends AppCompatActivity implements View.OnClic
             if (type == 0) {
                 TitleViewHolder holder = null;
                 if (convertView == null) {
-                    convertView = View.inflate(getApplicationContext(), R.layout.listview_app_item_title, null);
+                    convertView = View.inflate(getApplicationContext(), R.layout.list_item_title, null);
                     holder = new TitleViewHolder();
                     holder.title = (TextView) convertView.findViewById(R.id.tv_title);
                     convertView.setTag(holder);
@@ -260,15 +269,15 @@ public class AppManagerActivity extends AppCompatActivity implements View.OnClic
                     holder = (TitleViewHolder) convertView.getTag();
                 }
                 if (position == 0) {
-                    holder.title.setText("用户应用(" + phoneApps.size() + ")");
+                    holder.title.setText("用户应用(" + mUserSize + ")");
                 } else {
-                    holder.title.setText("系统应用(" + systemApps.size() + ")");
+                    holder.title.setText("系统应用(" + mSystemSize + ")");
                 }
                 return convertView;
             } else {
                 AppViewHolder appViewHolder;
                 if (convertView == null) {
-                    convertView = mInflater.inflate(R.layout.app_manager_item, parent, false);
+                    convertView = mInflater.inflate(R.layout.list_item_app_manager, parent, false);
                     appViewHolder = new AppViewHolder();
                     appViewHolder.icon = convertView.findViewById(R.id.img_icon);
                     appViewHolder.packageName = convertView.findViewById(R.id.tv_package_name);
