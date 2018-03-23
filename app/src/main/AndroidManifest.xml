@@ -188,7 +188,31 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".activity.CommonPhoneActivity"></activity>
+        <activity android:name=".activity.CommonPhoneActivity" />
+
+        <receiver android:name=".receiver.ProcessWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/process_widget_info" />
+        </receiver>
+
+        <service
+            android:name=".service.UpdateWidgetService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <receiver
+            android:name=".receiver.KillProcessReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.KILL_BACKGROUND_PROCESS"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
