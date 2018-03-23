@@ -18,13 +18,17 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+import test.qun.com.weishi.ConstantValue;
 import test.qun.com.weishi.R;
 import test.qun.com.weishi.bean.ProcessBean;
 import test.qun.com.weishi.engine.ProcessEngine;
+import test.qun.com.weishi.util.PreferencesUtil;
 
 public class ProcessManagerActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -102,7 +106,9 @@ public class ProcessManagerActivity extends AppCompatActivity implements View.On
         Button btnUnSelectAll = findViewById(R.id.btn_un_select_all);
         btnUnSelectAll.setOnClickListener(this);
         Button btnClear = findViewById(R.id.btn_clear);
+        btnClear.setOnClickListener(this);
         Button btnSetting = findViewById(R.id.btn_setting);
+        btnSetting.setOnClickListener(this);
     }
 
     @Override
@@ -120,15 +126,59 @@ public class ProcessManagerActivity extends AppCompatActivity implements View.On
                 }
                 mAdapter.notifyDataSetChanged();
                 break;
+            case R.id.btn_clear:
+                List<ProcessBean> killProcessList = new ArrayList<ProcessBean>();
+                Iterator<ProcessBean> iterator = mProcessBeans.iterator();
+                while (iterator.hasNext()) {
+                    ProcessBean bean = iterator.next();
+                    if (bean.packageName == getPackageName()) {
+                        continue;
+                    }
+                    if (bean.isCheck) {
+                        killProcessList.add(bean);
+                        if (bean.isSystem) {
+                            mSysProcessSize--;
+                        } else {
+                            mUserProcessSize--;
+                        }
+                        iterator.remove();
+                    }
+                }
+                long totalReleaseSpace = 0;
+                for (ProcessBean processInfo : killProcessList) {
+                    ProcessEngine.killProcess(this, processInfo);
+                    //记录释放空间的总大小
+                    totalReleaseSpace += processInfo.memSize;
+                }
+                if (mAdapter != null) {
+                    mAdapter.notifyDataSetChanged();
+                }
+                mProcessCount -= killProcessList.size();
+                mAvailSpace += totalReleaseSpace;
+                //11,根据进程总数和剩余空间大小
+                mTvProcessCount.setText("进程总数:" + mProcessCount);
+                mTvMemory.setText("剩余/总共" + Formatter.formatFileSize(this, mAvailSpace) + "/" + mStrTotalSpace);
+                String totalRelease = Formatter.formatFileSize(this, totalReleaseSpace);
+                Toast.makeText(getApplicationContext(), String.format("杀死了%d进程,释放了%s空间", killProcessList.size(), totalRelease), Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.btn_setting:
+                ProcessSettingActivity.enter(ProcessManagerActivity.this);
+                break;
         }
     }
+
+    private int mProcessCount;
+    private long mAvailSpace;
+    private long mStrTotalSpace;
 
     @Override
     protected void onStart() {
         super.onStart();
-        mTvProcessCount.setText("正在运行的进程数: " + mProcessEngine.obtainProcessCount(this) + "");
-        mTvMemory.setText("剩余/总共:" + Formatter.formatFileSize(this, mProcessEngine.obtainAvailableMemory(this))
-                + "/" + Formatter.formatFileSize(this, mProcessEngine.obtainTotalMemory(this)));
+        mProcessCount = mProcessEngine.obtainProcessCount(this);
+        mAvailSpace = mProcessEngine.obtainAvailableMemory(this);
+        mStrTotalSpace = mProcessEngine.obtainTotalMemory(this);
+        mTvProcessCount.setText("正在运行的进程数: " + mProcessCount + "");
+        mTvMemory.setText("剩余/总共:" + Formatter.formatFileSize(this, mAvailSpace) + "/" + Formatter.formatFileSize(this, mStrTotalSpace));
         queryProcessInfo();
     }
 
@@ -153,7 +203,13 @@ public class ProcessManagerActivity extends AppCompatActivity implements View.On
 
         @Override
         public int getCount() {
-            return mProcessBeans.size() + 2;
+            boolean isShowSysProcess = (boolean) PreferencesUtil.getData(ProcessManagerActivity.this, ConstantValue.KEY_SHOW_SYS_PROCESS, false);
+            if (isShowSysProcess) {
+                return mProcessBeans.size() + 2;
+            } else {
+                return mUserProcessSize + 1;
+            }
+
         }
 
         @Override
@@ -224,9 +280,9 @@ public class ProcessManagerActivity extends AppCompatActivity implements View.On
                 String strSize = Formatter.formatFileSize(getApplicationContext(), getItem(position).memSize);
                 viewHolder.memory.setText("占用内存:" + strSize);
                 viewHolder.isSelected.setChecked(getItem(position).isCheck);
-                if(getItem(position).packageName.equals(getPackageName())){
+                if (getItem(position).packageName.equals(getPackageName())) {
                     viewHolder.isSelected.setVisibility(View.GONE);
-                }else{
+                } else {
                     viewHolder.isSelected.setVisibility(View.VISIBLE);
                 }
 

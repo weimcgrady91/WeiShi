@@ -9,11 +9,13 @@ import android.os.Debug;
 
 import com.jaredrummler.android.processes.AndroidProcesses;
 import com.jaredrummler.android.processes.models.AndroidAppProcess;
+import com.jaredrummler.android.processes.models.AndroidProcess;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import test.qun.com.weishi.R;
+import test.qun.com.weishi.activity.ProcessManagerActivity;
 import test.qun.com.weishi.bean.ProcessBean;
 
 /**
@@ -121,5 +123,31 @@ public class ProcessEngine {
             }
         }
         return processInfoList;
+    }
+
+    public static void killProcess(Context context, ProcessBean processInfo) {
+        //1,获取activityManager
+        ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        //2,杀死指定包名进程(权限)
+        am.killBackgroundProcesses(processInfo.packageName);
+    }
+
+    public static void killAll(Context context) {
+        ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+            List<ActivityManager.RunningAppProcessInfo> runningAppProcessInfos = am.getRunningAppProcesses();
+            for (ActivityManager.RunningAppProcessInfo runningAppProcessInfo : runningAppProcessInfos) {
+                if (!context.getPackageName().equals(runningAppProcessInfo.processName)) {
+                    am.killBackgroundProcesses(runningAppProcessInfo.processName);
+                }
+            }
+        } else {
+            List<AndroidAppProcess> processes = AndroidProcesses.getRunningAppProcesses();
+            for (AndroidAppProcess process : processes) {
+                if (!context.getPackageName().equals(process.getPackageName())) {
+                    am.killBackgroundProcesses(process.getPackageName());
+                }
+            }
+        }
     }
 }

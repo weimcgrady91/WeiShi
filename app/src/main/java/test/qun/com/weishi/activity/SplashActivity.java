@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -24,9 +25,11 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import test.qun.com.weishi.ConstantValue;
 import test.qun.com.weishi.R;
 import test.qun.com.weishi.util.AppInfoUtil;
 import test.qun.com.weishi.util.LogUtil;
+import test.qun.com.weishi.util.PreferencesUtil;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -37,6 +40,7 @@ public class SplashActivity extends AppCompatActivity {
         initViews();
         initEngine();
         checkRequiredPermission(this);
+        initShortCut();
     }
 
     private void initViews() {
@@ -48,6 +52,33 @@ public class SplashActivity extends AppCompatActivity {
         AlphaAnimation alphaAnimation = (AlphaAnimation) AnimationUtils.loadAnimation(this, R.anim.splash_anim);
         view.startAnimation(alphaAnimation);
         importPhoneAreaDB("address.db");
+    }
+
+    /**
+     * 生成快捷方式
+     */
+    private void initShortCut() {
+        boolean hasShortcut = (boolean) PreferencesUtil.getData(this,ConstantValue.HAS_SHORTCUT,false);
+        if(hasShortcut) {
+            return;
+        }
+        //1,给intent维护图标,名称
+        Intent intent = new Intent("com.android.launcher.action.INSTALL_SHORTCUT");
+        //维护图标
+        intent.putExtra(Intent.EXTRA_SHORTCUT_ICON,
+                BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher));
+        //名称
+        intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, "卫士");
+        //2,点击快捷方式后跳转到的activity
+        //2.1维护开启的意图对象
+        Intent shortCutIntent = new Intent("android.intent.action.WEISHI");
+        shortCutIntent.addCategory("android.intent.category.DEFAULT");
+
+        intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortCutIntent);
+        //3,发送广播
+        sendBroadcast(intent);
+        //4,告知sp已经生成快捷方式
+        PreferencesUtil.setData(this, ConstantValue.HAS_SHORTCUT, true);
     }
 
     private void importPhoneAreaDB(final String dbName) {
@@ -130,7 +161,8 @@ public class SplashActivity extends AppCompatActivity {
             Manifest.permission.CALL_PHONE,
             Manifest.permission.SEND_SMS,
             Manifest.permission.READ_CALL_LOG,
-            Manifest.permission.WRITE_CALL_LOG
+            Manifest.permission.WRITE_CALL_LOG,
+            Manifest.permission.KILL_BACKGROUND_PROCESSES
     };
     //还需申请的权限列表
     private List<String> permissionsList = new ArrayList<String>();

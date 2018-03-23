@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="test.qun.com.weishi.activity.ProcessSettingActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@android:color/darker_gray"
+        android:gravity="center"
+        android:text="进程设置"
+        android:textSize="22sp" />
+
+    <CheckBox
+        android:id="@+id/cb_show_sys"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginLeft="8dp"
+        android:text="显示系统进程" />
+
+    <CheckBox
+        android:id="@+id/cb_screen_off_clean"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginLeft="8dp"
+        android:text="锁屏清理进程" />
+</LinearLayout>

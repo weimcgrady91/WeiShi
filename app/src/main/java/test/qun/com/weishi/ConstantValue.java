@@ -15,4 +15,6 @@ public class ConstantValue {
     public static final String KEY_ROCKET = "cbp_rocket";
     public static final String KEY_BLACK_NUMBER = "cbp_black_List";
 
+    public static final String KEY_SHOW_SYS_PROCESS = "key_show_sys_process";
+    public static final String HAS_SHORTCUT = "has_shortcut";
 }

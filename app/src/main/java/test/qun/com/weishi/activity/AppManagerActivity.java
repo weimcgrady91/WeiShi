@@ -15,6 +15,10 @@ import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.ScaleAnimation;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
@@ -204,6 +208,21 @@ public class AppManagerActivity extends AppCompatActivity implements View.OnClic
         mPopupWindow.setBackgroundDrawable(new ColorDrawable());
 //        popupWindow.showAsDropDown(parent, 100, 0);
         mPopupWindow.showAsDropDown(parent, 200, -250);
+
+
+        AlphaAnimation alphaAnimation = new AlphaAnimation(0,1);
+        alphaAnimation.setDuration(1000);
+        alphaAnimation.setFillAfter(true);
+        ScaleAnimation scaleAnimation = new ScaleAnimation(
+                0, 1,
+                0, 1,
+                Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF, 0.5f);
+        scaleAnimation.setDuration(1000);
+        scaleAnimation.setFillAfter(true);
+        AnimationSet animationSet = new AnimationSet(true);
+        animationSet.addAnimation(alphaAnimation);
+        animationSet.addAnimation(scaleAnimation);
     }
 
     public class AppBeanAdapter extends BaseAdapter {
