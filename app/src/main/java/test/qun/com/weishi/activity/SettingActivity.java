@@ -19,6 +19,7 @@ import test.qun.com.weishi.R;
 import test.qun.com.weishi.service.BlackNumberService;
 import test.qun.com.weishi.service.NumberAreaService;
 import test.qun.com.weishi.service.RocketService;
+import test.qun.com.weishi.service.WatchDogService;
 import test.qun.com.weishi.util.ServiceUtil;
 
 public class SettingActivity extends AppCompatActivity {
@@ -45,6 +46,14 @@ public class SettingActivity extends AppCompatActivity {
         public void onCreate(@Nullable Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.setting_pref);
+
+
+            SwitchPreference watchDogPreference = (SwitchPreference) findPreference(ConstantValue.KEY_WATCH_DOG);
+            if (ServiceUtil.isServiceRunning(App.sContext, WatchDogService.class.getName())) {
+                watchDogPreference.setChecked(true);
+            } else {
+                watchDogPreference.setChecked(false);
+            }
 
             SwitchPreference blackPreference = (SwitchPreference) findPreference(ConstantValue.KEY_BLACK_NUMBER);
             if (ServiceUtil.isServiceRunning(App.sContext, BlackNumberService.class.getName())) {
@@ -90,6 +99,17 @@ public class SettingActivity extends AppCompatActivity {
         @Override
         public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
             String key = preference.getKey();
+            if (ConstantValue.KEY_WATCH_DOG.equals(key)) {
+                SwitchPreference p = (SwitchPreference) preference;
+                if (p.isChecked()) {
+                    Intent intent = new Intent(getActivity(), WatchDogService.class);
+                    getActivity().startService(intent);
+                } else {
+                    Intent intent = new Intent(getActivity(), WatchDogService.class);
+                    getActivity().stopService(intent);
+                }
+            }
+
             if (ConstantValue.KEY_BLACK_NUMBER.equals(key)) {
                 SwitchPreference p = (SwitchPreference) preference;
                 if (p.isChecked()) {

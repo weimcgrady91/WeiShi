@@ -42,6 +42,16 @@ public class AdvancedToolsActivity extends AppCompatActivity {
                 enterCommonPhoneActivity();
             }
         });
+        findViewById(R.id.tv_app_lock).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                enterAppLockActivity();
+            }
+        });
+    }
+
+    private void enterAppLockActivity() {
+        AppLockActivity.enter(this);
     }
 
     private void enterCommonPhoneActivity() {

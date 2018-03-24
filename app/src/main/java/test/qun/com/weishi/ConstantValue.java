@@ -17,4 +17,5 @@ public class ConstantValue {
 
     public static final String KEY_SHOW_SYS_PROCESS = "key_show_sys_process";
     public static final String HAS_SHORTCUT = "has_shortcut";
+    public static final String KEY_WATCH_DOG = "cbp_watch_dog";
 }
