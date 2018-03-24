@@ -207,6 +207,7 @@
             android:enabled="true"
             android:exported="true"/>
 
+        
         <receiver
             android:name=".receiver.KillProcessReceiver"
             android:enabled="true"
