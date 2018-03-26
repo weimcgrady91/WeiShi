@@ -218,18 +218,19 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".activity.AppLockActivity"></activity>
+        <activity android:name=".activity.AppLockActivity" />
 
         <service
             android:name=".service.WatchDogService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
 
         <activity
             android:name=".activity.EnterPsdActivity"
             android:excludeFromRecents="true"
-            android:launchMode="singleInstance"></activity>
-        <activity android:name=".activity.CacheClearActivity"></activity>
+            android:launchMode="singleInstance" />
+        <activity android:name=".activity.CacheClearActivity" />
+        <activity android:name=".activity.TrafficActivity"></activity>
     </application>
 
 </manifest>
