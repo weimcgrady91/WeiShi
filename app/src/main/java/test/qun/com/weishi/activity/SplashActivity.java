@@ -179,6 +179,7 @@ public class SplashActivity extends AppCompatActivity {
         view.startAnimation(alphaAnimation);
         importDB("address.db");
         importDB("commonnum.db");
+        importDB("antivirus.db");
     }
 
     /**

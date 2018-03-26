@@ -65,8 +65,8 @@ public class MainActivity extends BaseActivity implements PwdFragment.OnPwdFragm
             case 3:
                 ProcessManagerActivity.enter(this);
                 break;
-            case 4:
-                TrafficActivity.enter(this);
+            case 5:
+                VirusesActivity.enter(this);
                 break;
             case 6:
                 CacheClearActivity.enter(this);

@@ -228,7 +228,10 @@
         <activity
             android:name=".activity.EnterPsdActivity"
             android:excludeFromRecents="true"
-            android:launchMode="singleInstance" />
+            android:launchMode="singleInstance">
+        </activity>
+        <activity android:name=".activity.VirusesActivity">
+        </activity>
         <activity android:name=".activity.CacheClearActivity" />
         <activity android:name=".activity.TrafficActivity"></activity>
     </application>

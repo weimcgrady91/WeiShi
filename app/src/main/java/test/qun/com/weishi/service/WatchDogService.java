@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import java.util.List;
 
@@ -76,6 +77,7 @@ public class WatchDogService extends Service {
                     List<ActivityManager.RunningTaskInfo> runningTasks = am.getRunningTasks(1);
                     ActivityManager.RunningTaskInfo runningTaskInfo = runningTasks.get(0);
                     String packageName = runningTaskInfo.topActivity.getPackageName();
+                    LogUtil.i(TAG,"top packageName=" + packageName);
                     for (AppBean appBean : mLockApps) {
                         if (appBean.getPackageName().equals(packageName)) {
                             if (!mSkipPackagename.equals(packageName)) {
