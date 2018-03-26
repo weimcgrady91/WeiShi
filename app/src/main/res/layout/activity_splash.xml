@@ -4,21 +4,44 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/launcher_bg"
-    tools:context="test.qun.com.weishi.activity.SplashActivity"
-    android:id="@+id/container">
+    android:background="@drawable/launcher_bg">
 
-    <TextView
-        android:id="@+id/tv_version"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="version:"
-        android:textStyle="bold"
-        android:textColor="@android:color/holo_red_light"
-        android:shadowColor="@android:color/holo_green_light"
-        android:shadowDx="3"
-        android:shadowDy="3"
-        android:shadowRadius="3"
-        android:textSize="28sp"/>
+    <RelativeLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/launcher_bg"
+        android:visibility="gone"
+        tools:context="test.qun.com.weishi.activity.SplashActivity">
+
+        <TextView
+            android:id="@+id/tv_version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:shadowColor="@android:color/holo_green_light"
+            android:shadowDx="3"
+            android:shadowDy="3"
+            android:shadowRadius="3"
+            android:text="version:"
+            android:textColor="@android:color/holo_red_light"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_splash"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="80dp">
+
+        <View
+            android:id="@+id/view_divider"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/bg_divider" />
+    </RelativeLayout>
 </RelativeLayout>
+
+
